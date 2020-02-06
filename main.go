@@ -65,9 +65,9 @@ func inputCall(input string){
 	//输出结果:
 	//inputJson: map[optParams:map[doTag:serverStart] optTag:TCPCode1]
 
-	//必须-操作标记
+	//传参必须-操作标记
 	optTag,_ 		:= util.InterfaceToStr(inputJson["optTag"])
-	//必须-操作参数
+	//传参必须-操作参数
 	optParams 		:= inputJson["optParams"].(map[string]interface{})
 
 	switch optTag {
