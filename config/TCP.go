@@ -13,7 +13,7 @@ var TCP *tcp
 //初始化
 func init(){
 	TCP = &tcp{
-		NetWork : "tcp",
-		Address : "127.0.0.1:20000",
+		NetWork	: "tcp",
+		Address	: "127.0.0.1:20000",
 	}
 }

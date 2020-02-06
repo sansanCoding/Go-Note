@@ -5,11 +5,11 @@ import (
 	"net"
 )
 
+var tcpClientMsgPrefix = "TCPCode1_TCPClient-"
+
 type TCPClient struct {
 	conn net.Conn
 }
-
-var tcpClientMsgPrefix = "TCPCode1_TCPClient-"
 
 func NewTCPClient() *TCPClient {
 	obj := new(TCPClient)
@@ -49,7 +49,7 @@ func (this *TCPClient) Send(writeByte []byte) *TCPClient{
 	_,err := this.conn.Write(writeByte)
 	//若发送产生错误,则以异常抛出
 	if err!=nil {
-		panic(localMsgPrefix+"connWrite:"+err.Error())
+		panic(localMsgPrefix+"connWriteErr:"+err.Error())
 	}
 
 	return this

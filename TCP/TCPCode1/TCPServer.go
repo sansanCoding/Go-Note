@@ -52,12 +52,15 @@ func (this *TCPServer) Start(){
 func (this *TCPServer) serverListen(){
 	localMsgPrefix := tcpServerMsgPrefix+"serverListen-"
 
-	//开启TCP协议-地址+端口-监听
+	//开启TCP协议-地址(包含ip+端口)-监听
 	listen,listenErr := net.Listen(config.TCP.NetWork,config.TCP.Address)
 	//若监听产生错误
 	if listenErr!=nil {
 		panic(localMsgPrefix+"netListen["+config.TCP.NetWork+","+config.TCP.Address+"]Err:"+listenErr.Error())
 	}
+
+	//其实下面执行的死循环读取,但是从资源开关上讲,有开还是得有关的
+	defer listen.Close()
 
 	//若监听执行成功,则下次不能重复触发该监听
 	tcpServerIsDoing = true

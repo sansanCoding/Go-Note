@@ -2,13 +2,13 @@ package main
 
 import (
 	"Go-Note/TCP/TCPCode1"
+	"Go-Note/UDP/UDPCode1"
 	"Go-Note/util"
 	"bufio"
 	"encoding/json"
 	"fmt"
 	"os"
 	"strings"
-
 )
 
 func main(){
@@ -78,6 +78,14 @@ func inputCall(input string){
 			//	1.TCPCode1的TCP服务端开启命令-命令行输入:{"optTag":"TCPCode1","optParams":{"doTag":"serverStart"}}
 			//	2.TCPCode1的TCP客户端调用命令-命令行输入:{"optTag":"TCPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 			TCPCode1.NewTCPCommon().Do(optParams)
+		}
+	//第1版-简易版UDP代码
+	case "UDPCode1":
+		{
+			//根据操作参数执行不同的操作
+			//	1.UDPCode1的TCP服务端开启命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"serverStart"}}
+			//	2.UDPCode1的TCP客户端调用命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
+			UDPCode1.NewUDPCommon().Do(optParams)
 		}
 	}
 }
