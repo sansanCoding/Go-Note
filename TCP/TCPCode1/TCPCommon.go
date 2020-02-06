@@ -34,8 +34,12 @@ func (this *TCPCommon) Do(params map[string]interface{}){
 				sendMsg = params["sendMsg"].(string)
 			}
 
+			//创建TCP客户端对象
+			tcpClient := NewTCPClient()
+			//最后关闭TCP链接
+			defer tcpClient.Close()
 			//发送消息并获取响应
-			response := NewTCPClient().Link().Send([]byte(sendMsg)).Response()
+			response := tcpClient.Link().Send([]byte(sendMsg)).Response()
 			fmt.Println("TCPCode1_TCPClient_Response:",response)
 		}
 	}

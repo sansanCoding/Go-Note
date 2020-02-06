@@ -71,3 +71,15 @@ func (this *TCPClient) Response() string {
 	//返回服务端的响应消息
 	return string(bytes[:n])
 }
+
+//TCP客户端-关闭链接
+func (this *TCPClient) Close()  {
+	localMsgPrefix := tcpClientMsgPrefix+"Close-"
+
+	//关闭链接
+	err := this.conn.Close()
+	//若读取产生错误,则以异常抛出
+	if err!=nil {
+		panic(localMsgPrefix+"connCloseErr:"+err.Error())
+	}
+}
