@@ -1,10 +1,12 @@
 package TCPCode1
 
 import (
+	"Go-Note/config"
 	"bufio"
 	"fmt"
 	"io"
 	"net"
+	"reflect"
 	"sync"
 )
 
@@ -51,10 +53,10 @@ func (this *TCPServer) serverListen(){
 	localMsgPrefix := tcpServerMsgPrefix+"serverListen-"
 
 	//开启TCP协议-地址+端口-监听
-	listen,listenErr := net.Listen(TCPNetWork,TCPAddress)
+	listen,listenErr := net.Listen(config.TCP.NetWork,config.TCP.Address)
 	//若监听产生错误
 	if listenErr!=nil {
-		panic(localMsgPrefix+"netListen["+TCPNetWork+","+TCPAddress+"]Err:"+listenErr.Error())
+		panic(localMsgPrefix+"netListen["+config.TCP.NetWork+","+config.TCP.Address+"]Err:"+listenErr.Error())
 	}
 
 	//若监听执行成功,则下次不能重复触发该监听
@@ -75,24 +77,20 @@ func (this *TCPServer) serverListen(){
 
 //TCP服务端-处理每一个链接
 func (this *TCPServer) serverAccept(conn net.Conn){
-	localMsgPrefix := tcpServerMsgPrefix+"serverAccept-"
+	//localMsgPrefix := tcpServerMsgPrefix+"serverAccept-"
 
 	//处理完毕后就关闭链接
 	defer conn.Close()
 
+	//缓存读取
+	readConn := bufio.NewReader(conn)
+
 	for {
-		//缓存读取
-		readConn := bufio.NewReader(conn)
 		//以128字节读取数据
 		var bytes [128]byte
 		n,err := readConn.Read(bytes[:])
-		//这个判断一般针对文件有用
-		if err==io.EOF {
-			go this.errChannelAdd(localMsgPrefix+"readConnReadEOF!")
-			break
-		//若是其他错误
-		}else if err!=nil {
-			go this.errChannelAdd(localMsgPrefix+"readConnReadErr:"+err.Error())
+		//错误检测
+		if this.serverAcceptReadErrorCheck(err) {
 			break
 		}
 		//将最开头获取到指定n的位置字节数据(包含n位置的字节)
@@ -102,6 +100,24 @@ func (this *TCPServer) serverAccept(conn net.Conn){
 		//输出给客户端
 		conn.Write([]byte(revStr))
 	}
+}
+
+//TCP服务端-处理每一个链接-读取错误检测处理
+//@return bool true 代表是有错误(也有部分不是错误,如读到输入流结尾,客户端端断开链接),false 代表是无错误
+func (this *TCPServer) serverAcceptReadErrorCheck(err error) bool {
+	localMsgPrefix := tcpServerMsgPrefix+"serverAcceptReadErrorCheck-"
+
+	//若是读到结尾,则代表没有了
+	if err==io.EOF {
+		go this.errChannelAdd(localMsgPrefix+"readConnReadEOF!")
+		return true
+	//若是其他错误
+	}else if err!=nil {
+		go this.errChannelAdd(localMsgPrefix+"readConnReadErr[ErrType:"+fmt.Sprint(reflect.TypeOf(err))+"]:"+err.Error())
+		return true
+	}
+
+	return false
 }
 
 //TCP服务端-错误通道监听

@@ -5,11 +5,6 @@ import (
 	"fmt"
 )
 
-//监听协议
-var TCPNetWork = "tcp"
-//监听地址
-var TCPAddress = "127.0.0.1:20000"
-
 type TCPCommon struct {
 
 }

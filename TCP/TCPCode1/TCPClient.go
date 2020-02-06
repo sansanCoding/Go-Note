@@ -1,6 +1,7 @@
 package TCPCode1
 
 import (
+	"Go-Note/config"
 	"net"
 )
 
@@ -31,7 +32,7 @@ func (this *TCPClient) Link() *TCPClient {
 	//存储创建链接产生的错误
 	var linkErr error
 	//创建链接
-	this.conn,linkErr = net.Dial(TCPNetWork,TCPAddress)
+	this.conn,linkErr = net.Dial(config.TCP.NetWork,config.TCP.Address)
 	//若创建链接产生错误,则以异常抛出
 	if linkErr!=nil {
 		panic(localMsgPrefix+"netDialErr:"+linkErr.Error())
