@@ -10,5 +10,5 @@ $   go run ./main.go
 $   {"optTag":"TCPCode1","optParams":{"doTag":"serverStart"}}
 # 2.客户端发起消息
 #   由于上面第1步已经进入到服务端监听,如下输入客户端消息发送的字符,其中sendMsg就是发送的具体消息
-#   {"optTag":"TCPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
+$   {"optTag":"TCPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 ```
