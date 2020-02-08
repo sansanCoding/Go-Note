@@ -72,14 +72,13 @@ func inputCall(input string){
 
 	//传参必须-操作标记
 	optTag,_ 		:= util.InterfaceToStr(inputJson["optTag"])
-	//传参必须-操作参数
+	//传参必须-操作参数(根据操作参数执行不同的操作)
 	optParams 		:= inputJson["optParams"].(map[string]interface{})
 
 	switch optTag {
 	//第1版-简易版TCP代码
 	case "TCPCode1":
 		{
-			//根据操作参数执行不同的操作
 			//	1.TCPCode1的TCP服务端开启命令-命令行输入:{"optTag":"TCPCode1","optParams":{"doTag":"serverStart"}}
 			//	2.TCPCode1的TCP客户端调用命令-命令行输入:{"optTag":"TCPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 			TCPCode1.NewTCPCommon().Do(optParams)
@@ -87,7 +86,6 @@ func inputCall(input string){
 	//第1版-简易版UDP代码
 	case "UDPCode1":
 		{
-			//根据操作参数执行不同的操作
 			//	1.UDPCode1的UDP服务端开启命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"serverStart"}}
 			//	2.UDPCode1的UDP客户端调用命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 			UDPCode1.NewUDPCommon().Do(optParams)
@@ -95,11 +93,22 @@ func inputCall(input string){
 	//数组Array
 	case "Array":
 		{
-			//数组测试
 			//一维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"oneTest"}}
 			//多维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"multiTest"}}
 			//小测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"exam"}}
 			GoBase.Array.Do(optParams)
+		}
+	//切片Slice
+	case "Slice":
+		{
+			//切片复制-命令行输入:{"optTag":"Slice","optParams":{"doTag":"copy"}}
+			GoBase.Slice.Do(optParams)
+		}
+	//指针
+	case "指针":
+		{
+			//小测试-命令行输入:{"optTag":"指针","optParams":{"doTag":"exam"}}
+			GoBase.Pointer.Do(optParams)
 		}
 	}
 }
