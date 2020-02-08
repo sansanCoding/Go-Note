@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Go-Note/GoBase"
 	"Go-Note/TCP/TCPCode1"
 	"Go-Note/UDP/UDPCode1"
 	"Go-Note/util"
@@ -8,6 +9,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"runtime/debug"
 	"strings"
 )
 
@@ -48,7 +50,10 @@ func inputCall(input string){
 	//捕获异常
 	defer func(){
 		if err := recover();err != nil {
+			//异常信息输出
 			fmt.Println("inputCallPanicErr:",err)
+			//异常时输出错误栈
+			fmt.Println(string(debug.Stack()))
 		}
 	}()
 
@@ -86,6 +91,15 @@ func inputCall(input string){
 			//	1.UDPCode1的UDP服务端开启命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"serverStart"}}
 			//	2.UDPCode1的UDP客户端调用命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 			UDPCode1.NewUDPCommon().Do(optParams)
+		}
+	//数组Array
+	case "Array":
+		{
+			//数组测试
+			//一维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"oneTest"}}
+			//多维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"multiTest"}}
+			//小测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"exam"}}
+			GoBase.Array.Do(optParams)
 		}
 	}
 }
