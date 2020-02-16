@@ -23,7 +23,7 @@ func NewUDPServer() *UDPServer {
 }
 
 //主入口-开始
-func (this *UDPServer) Start(){
+func (thisObj *UDPServer) Start(){
 
 	//若已经正在运行了,则不能重复请求
 	if udpServerIsDoing {
@@ -32,22 +32,22 @@ func (this *UDPServer) Start(){
 	}
 
 	//并发调用时只会被执行一次
-	this.doOnce.Do(func(){
+	thisObj.doOnce.Do(func(){
 
 		//1.异步开启错误通道监听(该步必须异步执行,否则使用通道会报错)
-		go this.errChannelListen()
+		go thisObj.errChannelListen()
 
 		//2.准备介入监听
 		fmt.Println(udpServerMsgPrefix+"Listen...")
 
 		//3.开启服务端监听(监听是阻塞的)
-		this.serverListen()
+		thisObj.serverListen()
 	})
 
 }
 
 //UDP服务端-开启监听
-func (this *UDPServer) serverListen(){
+func (thisObj *UDPServer) serverListen(){
 	localMsgPrefix := udpServerMsgPrefix+"serverListen-"
 
 	//开启UDP协议-IP+端口-监听
@@ -72,7 +72,7 @@ func (this *UDPServer) serverListen(){
 		//接收数据
 		n,addr,readErr := listen.ReadFromUDP(data[:])
 		if readErr!=nil {
-			go this.errChannelAdd(localMsgPrefix+"listenReadFromUDPErr:"+readErr.Error())
+			go thisObj.errChannelAdd(localMsgPrefix+"listenReadFromUDPErr:"+readErr.Error())
 			continue
 		}
 
@@ -82,14 +82,14 @@ func (this *UDPServer) serverListen(){
 		//发送数据
 		_,writeErr := listen.WriteToUDP(data[:n],addr)
 		if writeErr!=nil {
-			go this.errChannelAdd(localMsgPrefix+"listenWriteToUDPErr:"+writeErr.Error())
+			go thisObj.errChannelAdd(localMsgPrefix+"listenWriteToUDPErr:"+writeErr.Error())
 			continue
 		}
 	}
 }
 
 //UDP服务端-错误通道监听
-func (this *UDPServer) errChannelListen(){
+func (thisObj *UDPServer) errChannelListen(){
 	localMsgPrefix := udpServerMsgPrefix+"errChannelListen-"
 
 	//异常捕获
@@ -101,14 +101,14 @@ func (this *UDPServer) errChannelListen(){
 	}()
 
 	//获取错误通道里的内容
-	err := <- this.errChannel
+	err := <- thisObj.errChannel
 
 	//暂时先以这种方式直接输出
 	fmt.Println(localMsgPrefix+"err:",err)
 }
 
 //UDP服务端-添加错误信息到错误通道
-func (this *UDPServer) errChannelAdd(errInfo interface{}){
+func (thisObj *UDPServer) errChannelAdd(errInfo interface{}){
 	localMsgPrefix := udpServerMsgPrefix+"errChannelAdd-"
 
 	//异常捕获
@@ -120,5 +120,5 @@ func (this *UDPServer) errChannelAdd(errInfo interface{}){
 	}()
 
 	//添加错误信息到错误通道
-	this.errChannel <- errInfo
+	thisObj.errChannel <- errInfo
 }

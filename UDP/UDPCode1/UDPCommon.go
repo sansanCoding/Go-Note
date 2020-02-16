@@ -15,7 +15,7 @@ func NewUDPCommon() *UDPCommon {
 }
 
 //执行入口
-func (this *UDPCommon) Do(params map[string]interface{}) {
+func (thisObj *UDPCommon) Do(params map[string]interface{}) {
 	//传参必须-标记
 	doTag,_ := util.InterfaceToStr(params["doTag"])
 

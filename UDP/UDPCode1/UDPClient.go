@@ -26,13 +26,13 @@ func NewUDPClient() *UDPClient {
 //obj.Response()
 
 //UDP客户端-创建链接
-func (this *UDPClient) Link() *UDPClient {
+func (thisObj *UDPClient) Link() *UDPClient {
 	localMsgPrefix := udpClientMsgPrefix+"Link-"
 
 	//存储创建链接产生的错误
 	var connErr error
 	//创建链接
-	this.conn,connErr = net.DialUDP(config.UDP.NetWork,nil,&net.UDPAddr{
+	thisObj.conn,connErr = net.DialUDP(config.UDP.NetWork,nil,&net.UDPAddr{
 		IP:net.ParseIP(config.UDP.IP),
 		Port:config.UDP.Port,
 	})
@@ -41,24 +41,24 @@ func (this *UDPClient) Link() *UDPClient {
 		panic(localMsgPrefix+"netDialUDPErr:"+connErr.Error())
 	}
 
-	return this
+	return thisObj
 }
 
 //UDP客户端-发送消息
-func (this *UDPClient) Send(writeByte []byte) *UDPClient {
+func (thisObj *UDPClient) Send(writeByte []byte) *UDPClient {
 	localMsgPrefix := udpClientMsgPrefix+"Send-"
 
 	//发送消息到服务端
-	_,err := this.conn.Write(writeByte)
+	_,err := thisObj.conn.Write(writeByte)
 	if err!=nil {
 		panic(localMsgPrefix+"connWriteErr:"+err.Error())
 	}
 
-	return this
+	return thisObj
 }
 
 //UDP客户端-获取响应
-func (this *UDPClient) Response() map[string]interface{} {
+func (thisObj *UDPClient) Response() map[string]interface{} {
 	localMsgPrefix := udpClientMsgPrefix+"Response-"
 
 	//如果以下无法接收数据换成如下注释的方式获取试试
@@ -67,7 +67,7 @@ func (this *UDPClient) Response() map[string]interface{} {
 	//存储响应字节
 	var data [4096]byte
 	//读取UDP服务端的响应消息
-	n,addr,err := this.conn.ReadFromUDP(data[:])
+	n,addr,err := thisObj.conn.ReadFromUDP(data[:])
 	if err!=nil {
 		panic(localMsgPrefix+"connReadErr:"+err.Error())
 	}
@@ -83,11 +83,11 @@ func (this *UDPClient) Response() map[string]interface{} {
 }
 
 //UDP客户端-关闭链接
-func (this *UDPClient) Close() {
+func (thisObj *UDPClient) Close() {
 	localMsgPrefix := udpClientMsgPrefix+"Close-"
 
 	//关闭链接
-	err := this.conn.Close()
+	err := thisObj.conn.Close()
 	//若读取产生错误,则以异常抛出
 	if err!=nil {
 		panic(localMsgPrefix+"connCloseErr:"+err.Error())

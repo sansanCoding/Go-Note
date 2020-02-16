@@ -1,9 +1,10 @@
 package main
 
 import (
-	"Go-Note/GoBase"
 	"Go-Note/TCP/TCPCode1"
 	"Go-Note/UDP/UDPCode1"
+	"Go-Note/goBase"
+	"Go-Note/goTestCode"
 	"Go-Note/util"
 	"bufio"
 	"encoding/json"
@@ -12,6 +13,7 @@ import (
 	"runtime/debug"
 	"strings"
 )
+
 
 func main(){
 
@@ -96,19 +98,25 @@ func inputCall(input string){
 			//一维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"oneTest"}}
 			//多维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"multiTest"}}
 			//小测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"exam"}}
-			GoBase.Array.Do(optParams)
+			goBase.Array.Do(optParams)
 		}
 	//切片Slice
 	case "Slice":
 		{
 			//切片复制-命令行输入:{"optTag":"Slice","optParams":{"doTag":"copy"}}
-			GoBase.Slice.Do(optParams)
+			goBase.Slice.Do(optParams)
 		}
 	//指针
 	case "指针":
 		{
 			//小测试-命令行输入:{"optTag":"指针","optParams":{"doTag":"exam"}}
-			GoBase.Pointer.Do(optParams)
+			goBase.Pointer.Do(optParams)
+		}
+	//util
+	case "Util":
+		{
+			//命令行输入:{"optTag":"Util","optParams":{"methodName":"对应的方法名称"}}
+			goTestCode.UtilTestCode.Do(optParams)
 		}
 	}
 }

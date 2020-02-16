@@ -1,4 +1,4 @@
-package GoBase
+package goBase
 
 import (
 	"fmt"
@@ -47,30 +47,30 @@ func NewArray() *array {
 }
 
 //执行入口
-func (this *array) Do(params map[string]interface{}){
+func (thisObj *array) Do(params map[string]interface{}){
 	//传参必须-标记
 	doTag := params["doTag"].(string)
 	switch doTag {
 	//一维数组测试
 	case "oneTest":
 		{
-			this.OneTest()
+			thisObj.OneTest()
 		}
 	//多维数组测试
 	case "multiTest":
 		{
-			this.MultiTest()
+			thisObj.MultiTest()
 		}
 	//小测试
 	case "exam":
 		{
-			this.Exam1()
+			thisObj.Exam1()
 		}
 	}
 }
 
 //一维数组-测试
-func (this *array) OneTest(){
+func (thisObj *array) OneTest(){
 	var arr [5]int	//未初始化元素值为 0。
 	arr[1] = 1
 	fmt.Println(arr,len(arr))	//输出:[0 1 0 0 0] 5
@@ -96,7 +96,7 @@ func (this *array) OneTest(){
 }
 
 //多维数组-测试
-func (this *array) MultiTest(){
+func (thisObj *array) MultiTest(){
 	//定义 长度为2个的数组,值都是整型数组,每个值(即整型数组)拥有3个整型元素
 	arr := [2][3]int{
 		{1,2},
@@ -159,7 +159,7 @@ func (this *array) MultiTest(){
 //小测试(小测试方法命名,就以Exam+数字命名即可)
 //	找出数组中和为给定值的两个元素的下标，例如数组[1,3,5,8,7]，
 //	找出两个元素之和等于8的下标分别是（0，4）和（1，2）
-func (this *array) Exam1(){
+func (thisObj *array) Exam1(){
 
 	arr := [5]int{1,3,5,8,7}
 

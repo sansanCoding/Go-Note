@@ -1,4 +1,4 @@
-package GoBase
+package goBase
 
 import "fmt"
 
@@ -42,14 +42,14 @@ func NewSlice() *slice {
 }
 
 //执行入口
-func (this *slice) Do(params map[string]interface{}){
+func (thisObj *slice) Do(params map[string]interface{}){
 	//传参必须-标记
 	doTag := params["doTag"].(string)
 	switch doTag {
 	//切片复制
 	case "copy":
 		{
-			this.Copy()
+			thisObj.Copy()
 		}
 	}
 }
@@ -58,7 +58,7 @@ func (this *slice) Do(params map[string]interface{}){
 //copy ：函数 copy 在两个 slice 间复制数据，复制长度以 len 小的为准。两个 slice 可指向同一底层数组，允许元素区间重叠。
 //copy()函数是将第二个切片 复制到 第一个切片 上，复制长度以 len 小的为准。
 //@todo 应及时将所需数据 copy 到较小的 slice，以便释放超大号底层数组内存。
-func (this *slice) Copy(){
+func (thisObj *slice) Copy(){
 
 	arr := []int{4,5,6,}
 	arr1 := []int{1,2,}

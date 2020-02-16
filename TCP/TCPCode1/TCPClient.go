@@ -26,43 +26,43 @@ func NewTCPClient() *TCPClient {
 //obj.Response()
 
 //TCP客户端-创建链接
-func (this *TCPClient) Link() *TCPClient {
+func (thisObj *TCPClient) Link() *TCPClient {
 	localMsgPrefix := tcpClientMsgPrefix+"Link-"
 
 	//存储创建链接产生的错误
 	var linkErr error
 	//创建链接
-	this.conn,linkErr = net.Dial(config.TCP.NetWork,config.TCP.Address)
+	thisObj.conn,linkErr = net.Dial(config.TCP.NetWork,config.TCP.Address)
 	//若创建链接产生错误,则以异常抛出
 	if linkErr!=nil {
 		panic(localMsgPrefix+"netDialErr:"+linkErr.Error())
 	}
 
-	return this
+	return thisObj
 }
 
 //TCP客户端-发送消息
-func (this *TCPClient) Send(writeByte []byte) *TCPClient{
+func (thisObj *TCPClient) Send(writeByte []byte) *TCPClient{
 	localMsgPrefix := tcpClientMsgPrefix+"Send-"
 
 	//发送消息到服务端
-	_,err := this.conn.Write(writeByte)
+	_,err := thisObj.conn.Write(writeByte)
 	//若发送产生错误,则以异常抛出
 	if err!=nil {
 		panic(localMsgPrefix+"connWriteErr:"+err.Error())
 	}
 
-	return this
+	return thisObj
 }
 
 //TCP客户端-获取响应
-func (this *TCPClient) Response() string {
+func (thisObj *TCPClient) Response() string {
 	localMsgPrefix := tcpClientMsgPrefix+"Response-"
 
 	//存储响应字节
 	var bytes [512]byte
 	//读取服务端的响应消息
-	n,err := this.conn.Read(bytes[:])
+	n,err := thisObj.conn.Read(bytes[:])
 	//若读取产生错误,则以异常抛出
 	if err!=nil {
 		panic(localMsgPrefix+"connReadErr:"+err.Error())
@@ -73,11 +73,11 @@ func (this *TCPClient) Response() string {
 }
 
 //TCP客户端-关闭链接
-func (this *TCPClient) Close()  {
+func (thisObj *TCPClient) Close()  {
 	localMsgPrefix := tcpClientMsgPrefix+"Close-"
 
 	//关闭链接
-	err := this.conn.Close()
+	err := thisObj.conn.Close()
 	//若读取产生错误,则以异常抛出
 	if err!=nil {
 		panic(localMsgPrefix+"connCloseErr:"+err.Error())

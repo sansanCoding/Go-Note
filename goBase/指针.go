@@ -1,4 +1,4 @@
-package GoBase
+package goBase
 
 import "fmt"
 
@@ -71,14 +71,14 @@ func NewPointer() *pointer {
 }
 
 //执行入口
-func (this *pointer) Do(params map[string]interface{}){
+func (thisObj *pointer) Do(params map[string]interface{}){
 	//传参必须-标记
 	doTag := params["doTag"].(string)
 	switch doTag {
 	//小测试
 	case "exam":
 		{
-			this.Exam()
+			thisObj.Exam()
 		}
 	}
 }
@@ -87,7 +87,7 @@ func (this *pointer) Do(params map[string]interface{}){
 //指针小练习
 //程序定义一个int变量num的地址并打印
 //将num的地址赋给指针ptr，并通过ptr去修改num的值
-func (this *pointer) Exam(){
+func (thisObj *pointer) Exam(){
 	var num int
 	var ptr *int
 	fmt.Println(&num) //输出如:0xc000090040

@@ -15,7 +15,7 @@ func NewTCPCommon() *TCPCommon {
 }
 
 //执行入口
-func (this *TCPCommon) Do(params map[string]interface{}){
+func (thisObj *TCPCommon) Do(params map[string]interface{}){
 	//传参必须-标记
 	doTag,_ := util.InterfaceToStr(params["doTag"])
 
