@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-	"time"
 )
 
 //util包的测试代码
@@ -45,15 +44,35 @@ func (thisObj *utilTestCode) Do(params map[string]interface{}){
 //命令行-输入:{"optTag":"Util","optParams":{"methodName":"Curl"}}
 func (thisObj *utilTestCode) Curl(){
 	requestApi := "https://www.baidu.com/"
-	//按json数据请求
-	//res,resErr,resErrParams := util.Curl.RequestPostJsonHeader(requestApi,"{\"test\":\"test\"}",10*time.Second,map[string]string{})
-	//按post数据请求
-	res,resErr,resErrParams := util.Curl.RequestPostHeader(requestApi,map[string]string{
-		"test":"test",
-	},10*time.Second,map[string]string{})
-	fmt.Println("res:",res)
-	fmt.Println("resErr:",resErr)
-	fmt.Println("resErrParams:",resErrParams)
+
+	////POST+Header
+	////按json数据请求
+	////res,resErr,resErrParams := util.Curl.RequestPostJsonHeader(requestApi,"{\"test\":\"test\"}",10*time.Second,map[string]string{})
+	////按post数据请求
+	//res,resErr,resErrParams := util.Curl.RequestPostHeader(requestApi,map[string]string{
+	//	"test":"test",
+	//},10*time.Second,map[string]string{})
+	//fmt.Println("res:",res)
+	//fmt.Println("resErr:",resErr)
+	//fmt.Println("resErrParams:",resErrParams)
+
+	//POST+Header
+	requestParams := map[string]interface{}{
+		"apiParams":map[string]string{
+			"UserName":"Test",
+			"PassWord":"123456",
+		},
+		"apiResponseDataType":"map",
+	}
+	requestHeader := map[string]string{}
+	responseData := make(map[string]interface{})
+	requestErr,requestErrParams := util.Curl.Request("post",requestApi,requestParams,requestHeader,&responseData)
+
+	//调试输出:
+	fmt.Println("responseData:",responseData)
+	fmt.Println("requestErr:",requestErr)
+	fmt.Println("requestErrParams:",requestErrParams)
+
 }
 
 //seqMap调试

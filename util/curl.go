@@ -32,24 +32,22 @@ func NewCurl() *curl {
 
 //请求第三方平台-一般接口
 //调用示例:
-////请求接口地址
-//	requestUriPath := "http://192.168.0.0.1:55001/api/user/login"
-////发起POST请求
-//	requestApiResult,requestApiError,requestApiErrorParams := thisObj.request("post", requestUriPath,map[string]interface{}{
+//	requestApi := "https://www.baidu.com/"
+//	requestParams := map[string]interface{}{
 //		"apiParams":map[string]string{
 //			"UserName":"Test",
 //			"PassWord":"123456",
 //		},
 //		"apiResponseDataType":"map",
-//	})
-////获取请求结果
-//	responseData 		:= requestApiResult["responseData"].(map[string]interface{})
-//	responseDataLength 	:= requestApiResult["responseDataLength"].(int)
-////输出结果:
-//	fmt.Println("requestApiError:",requestApiError)
-//	fmt.Println("requestApiErrorParams:",requestApiErrorParams)
-//	fmt.Println("responseDataLength:",responseDataLength)
+//	}
+//	requestHeader := map[string]string{}
+//	responseData := make(map[string]interface{})
+//	requestErr,requestErrParams := util.Curl.Request("post",requestApi,requestParams,requestHeader,&responseData)
+//
+//	//调试输出:
 //	fmt.Println("responseData:",responseData)
+//	fmt.Println("requestErr:",requestErr)
+//	fmt.Println("requestErrParams:",requestErrParams)
 //
 //@params string method 请求方法,如get 或 post
 //@params string apiUri 请求第三方平台接口url地址
