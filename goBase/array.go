@@ -1,6 +1,7 @@
 package goBase
 
 import (
+	"Go-Note/util"
 	"fmt"
 	"strconv"
 )
@@ -48,28 +49,21 @@ func NewArray() *array {
 
 //执行入口
 func (thisObj *array) Do(params map[string]interface{}){
-	//传参必须-标记
-	doTag := params["doTag"].(string)
-	switch doTag {
-	//一维数组测试
-	case "oneTest":
-		{
-			thisObj.OneTest()
-		}
-	//多维数组测试
-	case "multiTest":
-		{
-			thisObj.MultiTest()
-		}
-	//小测试
-	case "exam":
-		{
-			thisObj.Exam1()
-		}
+	//传参必须-方法名
+	methodName := params["methodName"].(string)
+
+	//CallMethodReflect调试:
+	res,resOk := util.Helper.CallMethodReflect(thisObj,methodName,[]interface{}{})
+
+	//输出结果:
+	fmt.Println(res,resOk)
+	for k,v := range res {
+		fmt.Println("CallMethodReflectRes:",k,v)
 	}
 }
 
 //一维数组-测试
+//命令行-输入:{"optTag":"Array","optParams":{"methodName":"OneTest"}}
 func (thisObj *array) OneTest(){
 	var arr [5]int	//未初始化元素值为 0。
 	arr[1] = 1
@@ -96,6 +90,7 @@ func (thisObj *array) OneTest(){
 }
 
 //多维数组-测试
+//命令行-输入:{"optTag":"Array","optParams":{"methodName":"MultiTest"}}
 func (thisObj *array) MultiTest(){
 	//定义 长度为2个的数组,值都是整型数组,每个值(即整型数组)拥有3个整型元素
 	arr := [2][3]int{
@@ -159,6 +154,7 @@ func (thisObj *array) MultiTest(){
 //小测试(小测试方法命名,就以Exam+数字命名即可)
 //	找出数组中和为给定值的两个元素的下标，例如数组[1,3,5,8,7]，
 //	找出两个元素之和等于8的下标分别是（0，4）和（1，2）
+//命令行-输入:{"optTag":"Array","optParams":{"methodName":"Exam1"}}
 func (thisObj *array) Exam1(){
 
 	arr := [5]int{1,3,5,8,7}

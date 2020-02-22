@@ -1,6 +1,10 @@
 package goBase
 
-import "fmt"
+import (
+	"Go-Note/util"
+	"fmt"
+	"reflect"
+)
 
 //######################################################################################################################
 //GO-切片Slice
@@ -43,14 +47,16 @@ func NewSlice() *slice {
 
 //执行入口
 func (thisObj *slice) Do(params map[string]interface{}){
-	//传参必须-标记
-	doTag := params["doTag"].(string)
-	switch doTag {
-	//切片复制
-	case "copy":
-		{
-			thisObj.Copy()
-		}
+	//传参必须-方法名
+	methodName := params["methodName"].(string)
+
+	//CallMethodReflect调试:
+	res,resOk := util.Helper.CallMethodReflect(thisObj,methodName,[]interface{}{})
+
+	//输出结果:
+	fmt.Println(res,resOk)
+	for k,v := range res {
+		fmt.Println("CallMethodReflectRes:",k,v)
 	}
 }
 
@@ -58,6 +64,7 @@ func (thisObj *slice) Do(params map[string]interface{}){
 //copy ：函数 copy 在两个 slice 间复制数据，复制长度以 len 小的为准。两个 slice 可指向同一底层数组，允许元素区间重叠。
 //copy()函数是将第二个切片 复制到 第一个切片 上，复制长度以 len 小的为准。
 //@todo 应及时将所需数据 copy 到较小的 slice，以便释放超大号底层数组内存。
+//命令行-输入:{"optTag":"Slice","optParams":{"methodName":"Copy"}}
 func (thisObj *slice) Copy(){
 
 	arr := []int{4,5,6,}
@@ -71,5 +78,77 @@ func (thisObj *slice) Copy(){
 	//输出:
 	//arr: [4 5 6]
 	//arr1: [4 5]
+
+}
+
+//数组和切片的引用关系
+//命令行-输入:{"optTag":"Slice","optParams":{"methodName":"ArrayAndSliceRelation"}}
+func (thisObj *slice) ArrayAndSliceRelation(){
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例1 start ~~~~~~~~~~~~~~~~~~~~")
+	{
+		var s []int
+		a := [9]int{1,2,3,4,5,6,7,8,9}
+		s = a[2:4]
+
+		a[2] = 33
+		a[3] = 44
+		fmt.Println("s:",s)
+		fmt.Println("a:",a)
+
+		s[0] = 133
+		s[1] = 244
+		fmt.Println("s:",s)
+		fmt.Println("a:",a)
+
+		//输出结果:
+		//s: [33 44]
+		//a: [1 2 33 44 5 6 7 8 9]
+		//s: [133 244]
+		//a: [1 2 133 244 5 6 7 8 9]
+	}
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例1 end ~~~~~~~~~~~~~~~~~~~~")
+
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例2 start ~~~~~~~~~~~~~~~~~~~~")
+	{
+		a := [...]int{1,2,3}
+
+		testFunc := func(a []int){
+			a[1] = 99
+		}
+
+		fmt.Println("a:",a)
+
+		fmt.Println(reflect.TypeOf(a[0:2]))
+
+		//数组先进行元素截取,这样会形成切片,再进行函数传参,修改后的值也会影响原数组的值
+		testFunc(a[0:2])
+
+		fmt.Println("a:",a)
+
+		//输出结果:
+		//a: [1 2 3]
+		//a: [1 99 3]
+	}
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例2 end ~~~~~~~~~~~~~~~~~~~~")
+
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例3 start ~~~~~~~~~~~~~~~~~~~~")
+	{
+		a := [...]int{1,2,3}
+
+		//数组是值类型,赋值和传参是复制整个数组
+		testFunc := func(a [3]int){
+			//这里的修改针对的是变量副本,不是变量本身
+			a[1] = 99
+		}
+
+		fmt.Println("a:",a)
+		testFunc(a)
+		fmt.Println("a:",a)
+
+		//输出结果:
+		//a: [1 2 3]
+		//a: [1 2 3]
+	}
+	fmt.Println("~~~~~~~~~~~~~~~~~~~~ 示例3 end ~~~~~~~~~~~~~~~~~~~~")
 
 }

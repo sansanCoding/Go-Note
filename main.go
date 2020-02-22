@@ -95,15 +95,13 @@ func inputCall(input string){
 	//数组Array
 	case "Array":
 		{
-			//一维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"oneTest"}}
-			//多维数组测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"multiTest"}}
-			//小测试-命令行输入:{"optTag":"Array","optParams":{"doTag":"exam"}}
+			//命令行输入:{"optTag":"Array","optParams":{"methodName":"对应的方法名称"}}
 			goBase.Array.Do(optParams)
 		}
 	//切片Slice
 	case "Slice":
 		{
-			//切片复制-命令行输入:{"optTag":"Slice","optParams":{"doTag":"copy"}}
+			//命令行输入:{"optTag":"Slice","optParams":{"methodName":"对应的方法名称"}}
 			goBase.Slice.Do(optParams)
 		}
 	//指针
@@ -111,6 +109,30 @@ func inputCall(input string){
 		{
 			//小测试-命令行输入:{"optTag":"指针","optParams":{"doTag":"exam"}}
 			goBase.Pointer.Do(optParams)
+		}
+	//map数据
+	case "MapData":
+		{
+			//命令行输入:{"optTag":"MapData","optParams":{"methodName":"对应的方法名称"}}
+			goBase.MapData.Do(optParams)
+		}
+	//自定义类型
+	case "CustomType":
+		{
+			//命令行输入:{"optTag":"CustomType","optParams":{"methodName":"对应的方法名称"}}
+			goBase.CustomType.Do(optParams)
+		}
+	//struct结构体
+	case "StructType":
+		{
+			//命令行输入:{"optTag":"StructType","optParams":{"methodName":"对应的方法名称"}}
+			goBase.StructType.Do(optParams)
+		}
+	//流程控制
+	case "Lckz":
+		{
+			//命令行输入:{"optTag":"Lckz","optParams":{"methodName":"对应的方法名称"}}
+			goBase.Lckz.Do(goBase.Lckz,optParams)
 		}
 	//util
 	case "Util":
