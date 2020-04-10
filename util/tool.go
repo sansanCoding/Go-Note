@@ -19,6 +19,27 @@ import (
 
 //有部分类似php的方法参考来自于: "github.com/syyongx/php2go"
 
+//强转成字符串
+func DataToStr(data interface{}) string {
+	res,_ := InterfaceToStr(data)
+	return res
+}
+
+//强转成数字
+func DataToInt(data interface{}) int {
+	res,_ := InterfaceToInt(data)
+	return res
+}
+
+//强转成float64
+//需要扩展:"github.com/shopspring/decimal"
+//func DataToFloat64(data interface{}) float64 {
+//	res,_ 			:= InterfaceToStr(data)
+//	resDecimal,_ 	:= decimal.NewFromString(res)
+//	resFloat64,_ 	:= resDecimal.Float64()
+//	return resFloat64
+//}
+
 //interface转整型
 func InterfaceToInt(data interface{}) (int,error) {
 	dataStr,dataStrErr := JsonValToStr(data)
@@ -1621,11 +1642,11 @@ func IsNumeric(val interface{}) bool {
 		return true
 	case string:
 		str := val.(string)
+		// Trim any whitespace
+		str = strings.TrimSpace(str)
 		if str == "" {
 			return false
 		}
-		// Trim any whitespace
-		str = strings.TrimSpace(str)
 		if str[0] == '-' || str[0] == '+' {
 			if len(str) == 1 {
 				return false

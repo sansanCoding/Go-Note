@@ -84,6 +84,17 @@ func (thisObj *helper) HttpResponseJsonSuccess(message string, data interface{})
 	}
 }
 
+//失败响应处理
+//需要引用包: import ( "github.com/kataras/iris" )
+//func (thisObj *helper) HelperResponseFailedJSON(c iris.Context, message string, code interface{}) {
+//	//获取前置中间件的设置的初始开始时间
+//	diffTime := c.Values().Get("requestCurrentTime")
+//	currentTime := time.Now().UnixNano() / 1e3 //计算得出 微秒
+//	timeConsumed := currentTime - diffTime.(int64)
+//	result := iris.Map{"code": code, "msg": message, "status": 0, "time_consumed": timeConsumed}
+//	c.JSON(result)
+//}
+
 //http响应seqMap的Json-成功数据
 //@params string message 响应消息
 //@params string data 响应数据,解析成为json的字符串数据,如`{"test":"123"}`

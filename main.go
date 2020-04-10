@@ -92,6 +92,12 @@ func inputCall(input string){
 			//	2.UDPCode1的UDP客户端调用命令-命令行输入:{"optTag":"UDPCode1","optParams":{"doTag":"clientStart","sendMsg":"Test"}}
 			UDPCode1.NewUDPCommon().Do(optParams)
 		}
+	//字符串高级
+	case "StringAdvanced":
+		{
+			//命令行输入:{"optTag":"StringAdvanced","optParams":{"methodName":"对应的方法名称"}}
+			goBase.StringAdvanced.Do(optParams)
+		}
 	//数组Array
 	case "Array":
 		{
@@ -139,6 +145,12 @@ func inputCall(input string){
 		{
 			//命令行输入:{"optTag":"Util","optParams":{"methodName":"对应的方法名称"}}
 			goTestCode.UtilTestCode.Do(optParams)
+		}
+	//单元测试
+	case "FuncTest":
+		{
+			//命令行输入:{"optTag":"FuncTest","optParams":{"methodName":"对应的方法名称"}}
+
 		}
 	}
 }

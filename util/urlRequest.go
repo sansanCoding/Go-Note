@@ -14,6 +14,27 @@ package util
 //	"strings"
 //)
 
+
+//--------------------------------------------------------------------------------------------------------
+//	//获取请求参数示例:
+//	requestData := ctx.(iris.Context).GetViewData()
+//	requestDataOk := false
+//	//若不是后台请求过来的
+//	if len(requestData) == 0 {
+//		//获取POST参数(移动端参数获取)
+//		requestData, requestDataOk = util.PostPutDeleteRequestParamCompatibility(ctx)
+//		if !requestDataOk {
+//			//获取GET参数(WEB端参数获取)
+//			requestData, requestDataOk = util.GetRequestParam(ctx)
+//			if !requestDataOk {
+//				util.Helper.HelperResponseFailedJSON(ctx, "获取参数失败!", 0)
+//				return
+//			}
+//		}
+//	}
+//--------------------------------------------------------------------------------------------------------
+
+
 //获取POST,PUT,DELETE请求参数
 //func PostPutDeleteRequestParamCompatibility(ctx iris.Context) (map[string]interface{}, error) {
 //	contentType := ctx.GetHeader("Content-type")
