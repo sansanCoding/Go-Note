@@ -62,11 +62,15 @@ func (thisObj *slice) Do(params map[string]interface{}){
 
 //切片复制
 //copy ：函数 copy 在两个 slice 间复制数据，复制长度以 len 小的为准。两个 slice 可指向同一底层数组，允许元素区间重叠。
-//copy()函数是将第二个切片 复制到 第一个切片 上，复制长度以 len 小的为准。
+//总结:
+//	1.copy()函数是将第二个切片 复制到 第一个切片 上，复制长度以 len 小的为准。-- 参考示例1
+//	2.若是同一个切片，切分到多个变量上，则多个变量之间互相copy()也会影响原切片上。-- 参考示例2
 //@todo 应及时将所需数据 copy 到较小的 slice，以便释放超大号底层数组内存。
-//命令行-输入:{"optTag":"Slice","optParams":{"methodName":"Copy"}}
+//调试-命令行输入:
+//	{"optTag":"Slice","optParams":{"methodName":"Copy"}}
 func (thisObj *slice) Copy(){
-
+	//示例1:
+	fmt.Println("------------------示例1:------------------")
 	arr := []int{4,5,6,}
 	arr1 := []int{1,2,}
 
@@ -78,6 +82,35 @@ func (thisObj *slice) Copy(){
 	//输出:
 	//arr: [4 5 6]
 	//arr1: [4 5]
+
+	//示例2:
+	fmt.Println("------------------示例2:------------------")
+	{
+		data := []int{00,11,22,33,44,55,66,77,88,99}
+		arr1 := data[:3]
+		arr2 := data[3:]
+
+		fmt.Println("copy前:")
+		fmt.Println("arr1:",arr1)
+		fmt.Println("arr2:",arr2)
+
+		copy(arr1,arr2)
+
+		fmt.Println("copy后:")
+		fmt.Println("arr1:",arr1)
+		fmt.Println("arr2:",arr2)
+		fmt.Println("data:",data)	//两个同源的切片，互相copy()后，也会影响到原切片的值
+
+		//输出结果:
+		//------------------示例2:------------------
+		//copy前:
+		//arr1: [0 11 22]
+		//arr2: [33 44 55 66 77 88 99]
+		//copy后:
+		//arr1: [33 44 55]
+		//arr2: [33 44 55 66 77 88 99]
+		//data: [33 44 55 33 44 55 66 77 88 99]
+	}
 
 }
 
