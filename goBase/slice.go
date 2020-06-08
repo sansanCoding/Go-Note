@@ -22,8 +22,8 @@ import (
 //######################################################################################################################
 
 //关于切片的:冒号说明:
-//	a.冒号之前是起始位,获取值时不包含该起始位.
-//	b.冒号之后是截止位,获取值时包含该截止位.
+//	a.冒号之前是起始位,获取值时包含该起始位.
+//	b.冒号之后是截止位,获取值时不包含该截止位.
 //	简单示例:
 //		arr := []int{1,2,3,4,5,6,7,8,9,10,}
 //		arr[0:1] 输出的是1
@@ -58,6 +58,65 @@ func (thisObj *slice) Do(params map[string]interface{}){
 	for k,v := range res {
 		fmt.Println("CallMethodReflectRes:",k,v)
 	}
+}
+
+//append追加元素
+//append ：向 slice 尾部添加数据，返回新的 slice 对象。
+//总结:
+//	如果想让原切片变量赋予给新切片变量后，新切片变量的任何修改操作都不影响到原切片的话，
+//	目前只好是用原切片进行循环遍历，挨个将值赋予给新切片变量存储即可!
+//调试-命令行输入:
+//	{"optTag":"Slice","optParams":{"methodName":"Append"}}
+func (thisObj *slice) Append(){
+	arr := make([]int,0)
+	arr = append(arr,1,2,3,4,5)
+	//arr1 := append(arr,11,22,33,44,55)	//如果这里append是多个值,修改arr1的值不会影响到arr的值
+	arr1 := append(arr,[]int{111}...)		//如果这里append是1个值,修改arr1的值会影响到arr的值
+	arr1[0] = 888	//注意这里，arr1是由arr进行append后分配的内存地址，但是append只有1个值后，修改arr1的值也会影响到arr的值
+
+	//输出调试:
+	fmt.Println("arr:",arr,fmt.Sprintf("%p",&arr) )
+	fmt.Println("arr1:",arr1,fmt.Sprintf("%p",&arr1) )
+	//输出结果:
+	//arr: [888 2 3 4 5] 0xc000004740
+	//arr1: [888 2 3 4 5 111] 0xc000004760
+
+	//@todo 这里感觉有个bug,append追加2个元素以上后赋予给新变量，新变量的任何操作才不会影响原切片....
+	fmt.Println("直接获取原切片所有的值赋予给新变量，新变量的任何操作不会影响原切片-示例:")
+	arr11 := append(arr,10000,20000)
+	arr11[2] = 1111
+	//输出调试:
+	fmt.Println("arr:",arr,fmt.Sprintf("%p",&arr) )
+	fmt.Println("arr11:",arr11,fmt.Sprintf("%p",&arr11) )
+	//输出结果:
+	//直接获取原切片所有的值赋予给新变量，新变量的任何操作不会影响原切片-示例:
+	//arr: [888 2 3 4 5] 0xc000004740
+	//arr11: [888 2 1111 4 5 10000 20000] 0xc0000047c0
+	//-------------------------------------------------------------------
+	fmt.Println("-------------------------------------------------------------------")
+
+	arr2 := arr[:]
+	arr3 := arr
+	arr4 := arr[:2]
+	arr5 := arr[2:]
+	arr5[0] = 999	//注意这里，虽然arr5是新分配了内存地址，但是由于是arr切分出来的，切片底层依然会影响到arr的对应下标的值
+
+	//输出示例:
+	fmt.Println("arr:",arr,fmt.Sprintf("%p",&arr) )
+	fmt.Println("arr1:",arr1,fmt.Sprintf("%p",&arr1) )
+	fmt.Println("arr2:",arr2,fmt.Sprintf("%p",&arr2) )
+	fmt.Println("arr3:",arr3,fmt.Sprintf("%p",&arr3) )
+	fmt.Println("arr4:",arr4,fmt.Sprintf("%p",&arr4) )
+	fmt.Println("arr5:",arr5,fmt.Sprintf("%p",&arr5) )
+	//输出结果:
+	//arr: [888 2 999 4 5] 0xc000004740
+	//arr1: [888 2 999 4 5 111] 0xc000004760
+	//arr2: [888 2 999 4 5] 0xc000004820
+	//arr3: [888 2 999 4 5] 0xc000004840
+	//arr4: [888 2] 0xc000004860
+	//arr5: [999 4 5] 0xc000004880
+
+	fmt.Println("TestEnd!")
 }
 
 //切片复制
