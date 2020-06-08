@@ -4,6 +4,7 @@ import (
 	"Go-Note/TCP/TCPCode1"
 	"Go-Note/UDP/UDPCode1"
 	"Go-Note/goBase"
+	"Go-Note/goHighLevel"
 	"Go-Note/goTestCode"
 	"Go-Note/util"
 	"bufio"
@@ -150,7 +151,13 @@ func inputCall(input string){
 	case "FuncTest":
 		{
 			//命令行输入:{"optTag":"FuncTest","optParams":{"methodName":"对应的方法名称"}}
-
+			//具体代码参考:goBase/函数-单元测试-funcTest.go 和 函数-压力测试-goTest.go
+		}
+	//go高级
+	case "GoHighLevel":
+		{
+			//命令行输入:{"optTag":"GoHighLevel","optParams":{"methodName":"对应的方法名称"}}
+			goHighLevel.GoHighLevelStruct.Do(optParams)
 		}
 	}
 }
