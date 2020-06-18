@@ -3,6 +3,7 @@ package MySQL_Redis
 //@todo 参考Iris-Go注册数据库链接与注册Redis链接（但凡数据库或Redis链接创建失败,则直接退出程序不再执行）
 //@todo 必须要有如下包引入才可使用
 //import (
+//	"os"
 //	"database/sql"
 //	"github.com/go-redis/redis"
 //	_ "github.com/go-sql-driver/mysql"
