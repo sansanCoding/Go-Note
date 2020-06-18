@@ -15,7 +15,7 @@ package MongoDB
 //
 //var MongoDb *mongo.Client
 //
-////初始化mongodb
+////外部直接调用-初始化mongodb
 ////@todo 如main.go文件中写入MongodbInit(),相当于提前创建好链接,后面直接用,无需再重复创建
 ////@todo 跟mysql链接池和redis链接池创建逻辑相似!
 //func MongodbInit() {
