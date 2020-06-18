@@ -36,6 +36,11 @@ func NewHelper() *helper {
 	}
 }
 
+//获取当前时间戳-int类型数据
+func (thisObj *helper) CurrTimeInt() int {
+	return int(time.Now().Unix())
+}
+
 //json解析
 //@params interface{} t 基本上传参都是map数据类型,如map[string]interface{}或是map[string]string
 func (thisObj *helper) JSONMarshal(t interface{}) ([]byte, error) {
@@ -265,6 +270,212 @@ func (thisObj *helper) Long2IP(ipLong uint32) string {
 	binary.BigEndian.PutUint32(ipByte, ipLong)
 	ipStr := net.IP(ipByte)
 	return ipStr.String()
+}
+//检测是否是IPv4
+func (thisObj *helper) IsIPv4(ip string) bool {
+	//返回的值不等于nil,就是如果ip不是IPv4地址,To4返回nil,当且仅当地址是IPv4地址时,此条件才应返回true.
+	if net.ParseIP(ip).To4()!=nil {
+		return true
+	}
+	return false
+}
+//检测是否是IPv6
+func (thisObj *helper) IsIPv6(ip string) bool {
+	if thisObj.IsIPv4(ip) {
+		return false
+	}
+	return true
+}
+////多个IP地址集合解析(包含IPv6地址解析),如58.177.183.37,134.159.119.48
+//func (thisObj *helper) IP2Region(params map[string]interface{}) (actionResult []map[string]interface{}) {
+//	//必传-多个ip地址集合
+//	ips := params["ips"].(string)
+//	//可选-是否需要排重
+//	isUnique := false
+//	if params["isUnique"]!=nil {
+//		isUnique = params["isUnique"].(bool)
+//	}
+//	//去除ip左右多出的逗号
+//	ips = strings.Trim(ips,",")
+//
+//	//多个ip地址数组
+//	ipsArr := strings.Split(ips,",")
+//	//ip排重
+//	ipsMap := make(map[string]map[string]interface{})
+//
+//	//IPV4-解析
+//	ip2regionLibrary := NewIp2regionLibrary()
+//	defer ip2regionLibrary.Close()
+//	//IPV6-解析
+//	ipv6regionLibrary := NewIpv6regionLibrary(map[string]interface{}{})
+//	defer ipv6regionLibrary.Close()
+//
+//	//操作结果存储
+//	actionResult = make([]map[string]interface{},0)
+//	for _,ip := range ipsArr {
+//		//操作结果每项数据
+//		actionResultItem := map[string]interface{}{
+//			"ipStr":ip,
+//			"ipAddr":"---",
+//		}
+//
+//		//------------ ip地址值转换处理 ------------
+//		//模拟php的代码:
+//		//	有可能传递过来的是ip2long转换的整型ip值 转换成ip字符串
+//		//	$ipStr = is_numeric($ip) ? long2ip($ip) : $ip;
+//		ipStr := ""
+//		//若是整型值
+//		if thisObj.IsNumeric(ip) {
+//			//转成字符串
+//			ipInt,ipIntErr := strconv.Atoi(ip)
+//			//若转换出错
+//			if ipIntErr!=nil {
+//				actionResultItem["ipAddr"] = "IP_TO_INT_ERROR"
+//				actionResult = append(actionResult,actionResultItem)
+//				continue
+//			}
+//			//将整型值解析成ip地址
+//			ipStr = thisObj.Long2IP(uint32(ipInt))
+//		}else{
+//			//存储ip地址
+//			ipStr = ip
+//		}
+//
+//		//确认都是字符串ip返回
+//		actionResultItem["ipStr"] = ipStr
+//
+//		//是否排重
+//		if isUnique {
+//			//------------ 排重处理 ------------
+//			//若该IP已处理过,则不进行处理
+//			if ipsMap[ipStr]!=nil {
+//				continue
+//			}
+//		}else{
+//			//------------ 不排重处理 ------------
+//			//若是不排重,且之前找到过了,则不需要再重复找了
+//			if ipsMap[ipStr]!=nil {
+//				actionResult = append(actionResult,ipsMap[ipStr])
+//				continue
+//			}
+//		}
+//
+//		//------------ ip地址解析处理 ------------
+//		//如果是IPv4的处理
+//		if thisObj.IsIPv4(ipStr) {
+//			//IPV4地址解析处理
+//			ipv4Res,ipv4ResErr := ip2regionLibrary.DoIpAddressAnalyze(ipStr)
+//			if ipv4ResErr!=nil {
+//				actionResultItem["ipAddr"] = "IPV4_ADDRESS_ANALYZE_ERROR"
+//			}else{
+//				//调试输出:
+//				//fmt.Println("ipStr:",ipStr)
+//				//fmt.Println("ipv4Res:",ipv4Res)
+//				//输出结果:
+//				//ipStr: 134.159.119.47
+//				//ipv4Res: map[City:香港 CityId:0 Country:中国 ISP:澳大利亚电信 Province:香港 Region:0]
+//
+//				if len(ipv4Res)>0 {
+//					actionResultItem["ipAddr"] = ipv4Res["Country"].(string)+"-"+ipv4Res["Province"].(string)+"-"+ipv4Res["City"].(string)
+//				}else{
+//					actionResultItem["ipAddr"] = "IPV4_ADDRESS_NOT_FOUND"
+//				}
+//			}
+//		//如果是IPv6的处理
+//		}else if thisObj.IsIPv6(ipStr) {
+//			ipv6Res,ipv6ResErr := ipv6regionLibrary.GetIPv6Address(map[string]interface{}{
+//				"ipv6":ipStr,
+//			})
+//			if ipv6ResErr!=nil {
+//				actionResultItem["ipAddr"] = "IPV6_ADDRESS_ANALYZE_ERROR"
+//			}else{
+//				//调试输出:
+//				//fmt.Println("ipStr:",ipStr)
+//				//fmt.Println("ipv6Res:",ipv6Res)
+//				//输出结果:
+//				//ipStr: 2408:84e7:4ad:1776:9c97:e79d:1e94:e59e
+//				//ipv6Res: map[address:中国山西省 中国联通3GNET网络(全省通用) id:50440 ipv6:2408:84e7:4ad:1776:9c97:e79d:1e94:e59e]
+//
+//				if len(ipv6Res)>0 {
+//					actionResultItem["ipAddr"] = ipv6Res["address"].(string)
+//				}else{
+//					actionResultItem["ipAddr"] = "IPV6_ADDRESS_NOT_FOUND"
+//				}
+//			}
+//		//既不是IPv4,也不是IPv6,则是错误的
+//		}else{
+//			actionResultItem["ipAddr"] = "IP_IS_NOT_V4_OR_V6"
+//		}
+//
+//		//存储操作结果
+//		actionResult = append(actionResult,actionResultItem)
+//
+//		//存储查找过的结果
+//		ipsMap[ipStr] = actionResultItem
+//	}
+//
+//	return actionResult
+//}
+
+// IsNumeric is_numeric()
+// Numeric strings consist of optional sign, any number of digits, optional decimal part and optional exponential part.
+// Thus +0123.45e6 is a valid numeric value.
+// In PHP hexadecimal (e.g. 0xf4c3b00c) is not supported, but IsNumeric is supported.
+func (cthis *helper) IsNumeric(val interface{}) bool {
+	switch val.(type) {
+	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+		return true
+	case float32, float64, complex64, complex128:
+		return true
+	case string:
+		str := val.(string)
+		//现逻辑
+		//@update 2020.03.21 新增若是传入空格的修正处理
+		//	若这里不进行空格去除处理,到下面894行执行的时候会报错 runtime error: index out of range [0] with length 0,
+		// 	因为等strings.TrimSpace(str)执行去除空格后,str[0]是不可能有值的!
+		str = strings.TrimSpace(str)
+		if str == "" {
+			return false
+		}
+		//原逻辑
+		// Trim any whitespace
+		//str = strings.TrimSpace(str)
+		if str[0] == '-' || str[0] == '+' {
+			if len(str) == 1 {
+				return false
+			}
+			str = str[1:]
+		}
+		// hex
+		if len(str) > 2 && str[0] == '0' && (str[1] == 'x' || str[1] == 'X') {
+			for _, h := range str[2:] {
+				if !((h >= '0' && h <= '9') || (h >= 'a' && h <= 'f') || (h >= 'A' && h <= 'F')) {
+					return false
+				}
+			}
+			return true
+		}
+		// 0-9, Point, Scientific
+		p, s, l := 0, 0, len(str)
+		for i, v := range str {
+			if v == '.' { // Point
+				if p > 0 || s > 0 || i+1 == l {
+					return false
+				}
+				p = i
+			} else if v == 'e' || v == 'E' { // Scientific
+				if i == 0 || s > 0 || i+1 == l {
+					return false
+				}
+				s = i
+			} else if v < '0' || v > '9' {
+				return false
+			}
+		}
+		return true
+	}
+
+	return false
 }
 
 //GET请求url-路径拼接
