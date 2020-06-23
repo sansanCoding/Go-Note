@@ -12,7 +12,7 @@ import (
 	@todo 2.安装完protobuf后,还需要go get -u github.com/golang/protobuf/protoc-gen-go,针对go编译插件!
 	@todo 3.写一个.proto后缀的文件存在
 	@todo 4.使用protoc --go_out=将proto解析为go代码文件
-	@todo 示例如 protoc --go_out=. --proto_path=. *.proto (意思输出go代码文件到当前目录下)
+	@todo 示例如 protoc --go_out=. --proto_path=. *.proto (--go_out=.意思输出go代码文件到当前目录下)
 	@todo ------------------------------------------------------------------------------
 	@todo protoc --proto_path=IMPORT_PATH --<lang>_out=DST_DIR path/to/file.proto
 	@todo --proto_path=IMPORT_PATH：可以在 .proto 文件中 import 其他的 .proto 文件，proto_path 即用来指定其他 .proto 文件的查找目录。如果没有引入其他的 .proto 文件，该参数可以省略。
@@ -21,6 +21,8 @@ import (
 	@todo 总结:
 	@todo protoc+protoc-gen-go,就可以让.proto文件解析为go代码文件!
 */
+
+//@todo 直接CD进入到Go-Note/protobuf目录下,使用go run testMain.go介入测试!
 
 func main(){
 	test := &Test.Test{
