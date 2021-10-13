@@ -1,0 +1,57 @@
+1.进入到/etc/profile 文件中,在于之前配置的GOPATH相关的环境变量最下面配置GOMODULE
+
+#进入文件
+vim /etc/profile
+
+#找到如下之前Go相关配置的地方
+export GOROOT=/root/go_test/go
+export PATH=$GOROOT/bin:$PATH
+export GOPATH=/root/go
+
+#在上面的最后追加如下  
+export GO111MODULE=on
+export GOPROXY=https://goproxy.io
+      
+      ################## 当上面的一个不顶用时,可配置成下面多个地址的 ###############################
+      # export GOPROXY=https://goproxy.cn,https://gocenter.io,https://goproxy.io,direct
+      ##########################################################################################
+      
+#保存并退出/etc/profile,刷新下环境变量
+source /etc/profile
+
+
+
+
+
+
+
+
+
+
+---------------------- 网上找的：目前发现的几个不错的goproxy ----------------------
+阿里云
+配置如下：
+export GOPROXY=https://mirrors.aliyun.com/goproxy/
+
+nexus社区提供的
+配置如下：
+export GOPROXY=https://gonexus.dev
+
+goproxy.io 的
+配置如下：
+export GOPROXY=https://goproxy.io/
+
+基于athens的公共服务
+配置如下：
+export GOPROXY=https://athens.azurefd.net
+
+官方提供的(jfrog,golang)
+export GOPROXY=https://gocenter.io
+export GOPROXY=https://proxy.golang.org
+
+七牛云赞助支持的
+export GOPROXY=https://goproxy.cn
+ 
+说明
+国内一般来说使用阿里云的基本够用了，但是有时阿里云也会不好使，后边的几个可以可以做为后备，以备
+不时之需，以上是我目前发现的一些比较好的，后期有的
