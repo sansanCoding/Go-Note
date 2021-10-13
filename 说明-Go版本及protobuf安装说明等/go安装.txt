@@ -1,9 +1,122 @@
-Go-Linux安装说明:
+Go-Linux安装说明(如下Linux命令以centos7为示例):
 
-1.先安装必要的前置软件
+一.先安装必要的前置软件
 
 #-y(当安装过程提示选择全部为"yes")
 yum install -y git gcc
 
 
-2.安装go
+二.安装go
+1.下载Go最新版本压缩包
+  #Go官方下载地址
+    浏览器打开: https://golang.google.cn/dl/
+
+  #访问官方下载地址后,找到 Featured downloads 下边的 Linux 的下载地址
+    ##显示如下效果:
+    Linux
+    Linux 2.6.23 or later, Intel 64-bit processor   ###这个信息可以看下,一般都是64位的
+    go1.17.2.linux-amd64.tar.gz (129MB)             ###复制这个go1.17.2...或者最新版本号的下载地址(鼠标放上去,左键点击就是直接下载,右键点击复制链接地址,要的是右键复制下载链接地址)
+
+  #进入到Linux服务器,使用wget执行刚才复制的下载链接地址(如果wget没有,需先安装下wget软件 或 其他可下载软件 或 ftp上传到服务器的操作 都行,要的就是这个压缩包)
+    ##这里直接以root账号的家目录创建了一个go_test目录(不一定是叫go_test目录名,可以叫做其他的,反正是存压缩包和解压包内容的目录即可)存储压缩包然后再解压包内容
+      ###创建go_test目录
+      mkdir /root/go_test
+
+      ###进入到该目录
+      cd /root/go_test
+
+      ###执行wget下载压缩包
+      wget https://golang.google.cn/dl/go1.17.2.linux-amd64.tar.gz
+
+      ###解压包内容
+      tar -zxvf go1.17.2.linux-amd64.tar.gz
+
+2.建立Go的工作空间（workspace，也就是GOPATH环境变量指向的目录）
+
+  #Go代码必须在工作空间内。工作空间是一个目录，其中包含三个子目录：
+
+    ##src ---- 里面每一个子目录，就是一个包。包内是Go的源码文件
+
+    ##pkg ---- 编译后生成的，包的目标文件
+
+    ##bin ---- 生成的可执行文件
+    
+
+    ################################################################ 开发人员看的 #############################################################################################
+    #   如果我们使用版本管理工具（Version Control System，VCS。常用如Git）来管理我们的项目代码时，我们只需要添加$GOPATH/src目录的源代码即可。bin 和 pkg 目录的内容无需版本控制。
+    ##########################################################################################################################################################################
+    
+
+    ##这里，我们在/root目录下, 建立一个名为go(可以不是go, 任意名字都可以)的文件夹， 然后再建立三个子文件夹(子文件夹名必须为src、pkg、bin)。
+
+      ###创建go目录
+      mkdir /root/go
+
+      ###进入到该目录
+      cd /root/go
+
+      ###创建go工作空间的三个子目录
+      mkdir bin pkg src
+
+3.设置GOROOT,GOPATH等一些go需要的环境变量
+  
+  #将GOPATH等环境变量设置为全局可使用的
+  vim /etc/profile
+  
+  #将光标移动到最后,追加写入如下:
+  export GOROOT=/root/go_test/go
+  export PATH=$GOROOT/bin:$PATH
+  export GOPATH=/root/go
+  
+  #保存并退出/etc/profile,刷新下环境变量
+  source /etc/profile
+
+
+----- 至此，Go语言的环境已经安装完毕。-----
+
+4.验证下Go是否安装成功
+  #查看Go版本
+  go version
+    ##输出如下
+    go version go1.17.2 linux/amd64
+    
+  #查看Go环境信息 
+  go env
+    ##输出如下
+    GO111MODULE=""
+    GOARCH="amd64"
+    GOBIN=""
+    GOCACHE="/root/.cache/go-build"
+    GOENV="/root/.config/go/env"
+    GOEXE=""
+    GOEXPERIMENT=""
+    GOFLAGS=""
+    GOHOSTARCH="amd64"
+    GOHOSTOS="linux"
+    GOINSECURE=""
+    GOMODCACHE="/root/go/pkg/mod"
+    GONOPROXY=""
+    GONOSUMDB=""
+    GOOS="linux"
+    GOPATH="/root/go"
+    GOPRIVATE=""
+    GOPROXY="https://proxy.golang.org,direct"
+    GOROOT="/root/go_test/go"
+    GOSUMDB="sum.golang.org"
+    GOTMPDIR=""
+    GOTOOLDIR="/root/go_test/go/pkg/tool/linux_amd64"
+    GOVCS=""
+    GOVERSION="go1.17.2"
+    GCCGO="gccgo"
+    AR="ar"
+    CC="gcc"
+    CXX="g++"
+    CGO_ENABLED="1"
+    GOMOD="/dev/null"
+    CGO_CFLAGS="-g -O2"
+    CGO_CPPFLAGS=""
+    CGO_CXXFLAGS="-g -O2"
+    CGO_FFLAGS="-g -O2"
+    CGO_LDFLAGS="-g -O2"
+    PKG_CONFIG="pkg-config"
+    GOGCCFLAGS="-fPIC -m64 -pthread -fmessage-length=0 -fdebug-prefix-map=/tmp/go-build4249901469=/tmp/go-build"
