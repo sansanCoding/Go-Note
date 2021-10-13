@@ -12,7 +12,7 @@ export GOPATH=/root/go
 export GO111MODULE=on
 export GOPROXY=https://goproxy.io
       
-      ################## 当上面的一个不顶用时,可配置成下面多个地址的 ###############################
+      ################## 当上面的一个地址不顶用时,可配置成下面多个地址的 ###############################
       # export GOPROXY=https://goproxy.cn,https://gocenter.io,https://goproxy.io,direct
       ##########################################################################################
       
