@@ -1,0 +1,6 @@
+Go-Linux安装说明:
+
+1.先安装必要的前置软件
+yum install -y git gcc
+
+2.安装go
