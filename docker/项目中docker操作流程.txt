@@ -1,0 +1,157 @@
+﻿#因涉及下面的本机目录挂载到容器目录,需要提前创建好本机目录（即创建个人的）
+cd /root
+mkdir ralph
+cd ralph
+mkdir go
+cd go
+mkdir bin pkg src
+
+
+
+#启动容器-后台运行-指定容器端口8181映射本机端口8181(默认容器端口是开放的,可能本机端口需要配置放开端口访问)-将本机/root/ralph/go/src目录挂载到容器/go/src目录(这样直接在本机src目录下的文件修改就完成了容器src目录下的文件修改)
+##此命令会响应容器id,复制响应的容器id给docker exec使用
+docker run -itd -p 8181:8181 --name=yolo-ralph -v /root/ralph/go/src:/go/src golang:latest /bin/bash
+
+###docker run 相关参数说明###
+一个镜像可以启动多个容器,只要容器设置的名称不一样即可!
+
+如同一个镜像源，启动各自的容器，容器端口是映射本机端口，所以也要不相同的(当然如果有其他方式可避免端口冲突的多人容器启动方式最好)
+docker run -itd -p 8181:8181 --name=yolo-page 	-v /root/page/go/src:/go/src	golang:latest /bin/bash
+docker run -itd -p 8182:8182 --name=yolo-ralph	-v /root/ralph/go/src:/go/src	golang:latest /bin/bash
+
+#实例效果:
+[root@IE-L-DEV-003 ~]# docker ps -a
+CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS                          NAMES
+333f6de11eb3        golang:latest       "/bin/bash"              8 minutes ago       Up 8 minutes        0.0.0.0:8182->8182/tcp         yolo-ralph-2
+1a64dad14913        golang:latest       "/bin/bash"              20 hours ago        Up 20 hours         0.0.0.0:8181->8181/tcp         yolo-ralph
+9f3fe769d495        golang:latest       "/usr/bin/tail -f ..."   2 days ago          Up 2 days           80/tcp, 0.0.0.0:80->8080/tcp   yolo-ed
+
+#############################
+
+
+#进入容器(以-it开头和/bin/bash结尾启动容器,则以同样方式进入容器)
+docker exec -it 8388355b39185452194c6514b7c26906f18c094e6330286a4aa57a069f1bf75f /bin/bash
+
+
+
+#CentOS7-docker容器-安装vim
+##先同步 /etc/apt/sources.list 和 /etc/apt/sources.list.d 中列出的源的索引，这样才能获取到最新的软件包。---此操作执行一次即可---
+apt-get update
+##安装vim,中途提示[y/N] 输入y即可 ---上面更新后,可
+apt-get install vim
+
+#喜欢ll(即ls -l)命令的可以先配置下
+##vim进入到/root/.bashrc
+vim /root/.bashrc
+##进入到.bashrc文件后，写入如下配置设置ls -l的别名
+alias ll='ls -l'
+##c./root/.bashrc保存退出后,使用source使刚添加的命令生效
+source /root/.bashrc
+
+
+
+######################################################################## docker容器-安装protobuf ################################################################################################################################################
+##需要先下载好protobuf.tar.gz安装包,protobuf官网下载地址:https://github.com/protocolbuffers/protobuf/releases
+##将protobuf.tar.gz的安装包放入到本机挂载目录中(即/root/ralph/go/src目录下),然后进入挂载到docker容器目录(即/go/src目录下)
+##然后将 protobuf.tar.gz 移动到存放安装软件的目录(如这里可以在/根目录下创建一个data目录和protobuf子目录,将protobuf.tar.gz转移到/data/protobuf目录下)
+cd /
+mkdir data
+cd data
+mkdir protobuf
+cd protobuf
+mv /go/src/protobuf-all-21.4.tar.gz ./
+tar -zxvf ./protobuf-all-21.4.tar.gz
+cd protobuf-21.4
+
+./configure
+################ ./configure 执行后最后显示如下即是ok的: ################
+checking for joinable pthread attribute... PTHREAD_CREATE_JOINABLE
+checking if more special flags are required for pthreads... no
+checking whether to check for GCC pthread/shared inconsistencies... yes
+checking whether -pthread is sufficient with -shared... yes
+checking for gtest-config... no
+checking that generated files are newer than configure... done
+configure: creating ./config.status
+config.status: creating Makefile
+config.status: creating scripts/gmock-config
+config.status: creating build-aux/config.h
+config.status: executing depfiles commands
+config.status: executing libtool commands
+#############################################################################
+
+make #执行make可能会看到一些警告提示这些，先不管，继续往下编译
+################ make 执行后最后显示如下：################ 
+  CXXLD    libprotoc.la
+copying selected object files to avoid basename conflicts...
+  CXXLD    protoc
+  CXXLD    libprotobuf-lite.la
+#############################################################################
+
+make check #继续执行make check
+################ make check 执行后最后显示如下是ok的：################ 
+============================================================================
+Testsuite summary for Protocol Buffers 3.21.4
+============================================================================
+# TOTAL: 6
+# PASS:  6
+# SKIP:  0
+# XFAIL: 0
+# FAIL:  0
+# XPASS: 0
+# ERROR: 0
+============================================================================
+make[3]: Leaving directory '/data/protobuf/protobuf-21.4/src'
+make[2]: Leaving directory '/data/protobuf/protobuf-21.4/src'
+make[1]: Leaving directory '/data/protobuf/protobuf-21.4/src'
+#############################################################################
+
+make install #继续执行make install
+################ make install 执行后最后显示如下是ok的：################ 
+ /bin/mkdir -p '/usr/local/include/google/protobuf/compiler/python'
+ /usr/bin/install -c -m 644  google/protobuf/compiler/python/generator.h google/protobuf/compiler/python/pyi_generator.h google/protobuf/compiler/python/python_generator.h '/usr/local/include/google/protobuf/compiler/python'
+make[2]: Leaving directory '/data/protobuf/protobuf-21.4/src'
+make[1]: Leaving directory '/data/protobuf/protobuf-21.4/src'
+#############################################################################
+
+#输入protoc --version,若提示如下,则需要再敲入命令 export LD_LIBRARY_PATH=/usr/local/lib/ 即可（先用ls -l 看下/usr/local/lib/目录下是否有libprotoc相关文件，一般都会有）
+root@333f6de11eb3:/data/protobuf/protobuf-21.4# protoc --version
+	protoc: error while loading shared libraries: libprotoc.so.32: cannot open shared object file: No such file or directory
+root@333f6de11eb3:/data/protobuf/protobuf-21.4# export LD_LIBRARY_PATH=/usr/local/lib/	#这个是临时的,下面有配置永久的
+
+#同时编辑/root/.bashrc
+vim /root/.bashrc
+#写入如下配置
+export LD_LIBRARY_PATH=/usr/local/lib/
+export GOPATH=/go
+export PATH=$PATH:$GOPATH/bin
+#退出/root/.bashrc,使输入生效
+source /root/.bashrc
+
+
+#再获取go扩展---自go1.17后使用go install安装(-i可以看到安装时的详细信息)---
+go install -i github.com/golang/protobuf/{proto@latest,protoc-gen-go@latest}
+
+
+#proto文件要写入option go_package = "./;当前package名";
+##如下示例
+package Test;
+option go_package = "./;Test";
+
+
+#使用protoc生成xxx.pb.go文件
+##--<lang>_out=DST_DIR：指定生成代码的目标文件夹，例如 --go_out=. 即生成 GO 代码在当前文件夹，另外支持 cpp/java/python/ruby/objc/csharp/php 等语言
+
+## --proto_path=IMPORT_PATH：可以在 .proto 文件中 import 其他的 .proto 文件，proto_path 即用来指定其他 .proto 文件的查找目录。如果没有引入其他的 .proto 文件，该参数可以省略。
+protoc --go_out=. --proto_path=. *.proto
+
+#当生成xxx.pb.go文件后使用其代码时,可能会报如下的错误,按照提示下载扩展即可
+root@333f6de11eb3:/go/src# go run ./index.go 
+Test/test.pb.go:10:2: no required module provides package google.golang.org/protobuf/reflect/protoreflect; to add it:
+	go get google.golang.org/protobuf/reflect/protoreflect
+Test/test.pb.go:11:2: no required module provides package google.golang.org/protobuf/runtime/protoimpl; to add it:
+	go get google.golang.org/protobuf/runtime/protoimpl
+
+##xxx.pb.go文件需要的扩展---这里go get即可,加上-u -v显示下载信息---
+go get -u -v google.golang.org/protobuf/reflect/protoreflect
+go get -u -v google.golang.org/protobuf/runtime/protoimpl
+##################################################################################################################################################################################################################################################
