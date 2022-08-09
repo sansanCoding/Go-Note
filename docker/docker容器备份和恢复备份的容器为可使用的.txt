@@ -1,0 +1,59 @@
+参考文章地址:
+https://wenku.baidu.com/view/0283acc31ae8b8f67c1cfad6195f312b3169eb7c.html
+
+
+1.备份容器
+docker commit #从容器创建一个新的镜像。
+
+语法
+docker commit [OPTIONS] CONTAINER [REPOSITORY[:TAG]]
+OPTIONS说明：
+
+-a :提交的镜像作者；
+
+-c :使用Dockerfile指令来创建镜像；
+
+-m :提交时的说明文字；
+
+-p :在commit时，将容器暂停。
+
+实例
+将容器a404c6c174a2 保存为新的镜像,并添加提交人信息和说明信息。
+runoob@runoob:~$ docker commit -a "runoob.com" -m "my apache" a404c6c174a2  mymysql:v1 
+sha256:37af1236adef1544e8886be23010b66577647a40bc02c0885a6600b33ee28057
+runoob@runoob:~$ docker images mymysql:v1
+REPOSITORY          TAG                 IMAGE ID            CREATED             SIZE
+mymysql             v1                  37af1236adef        15 seconds ago      329 MB
+--------------------------------------------------------
+实际操作示例：
+docker ps #只要是找到容器id
+
+docker commit -p 容器id 备份容器名称 #-p是将容器暂停,该命令会生成一个Docker镜像的容器快照;同时此一部会返回一个id值,登录Docker注册中心并推送该镜像时会使用到
+
+docker images #查看备份的Docker镜像,为了今后使用；一种登录Docker注册中心并推送该镜像;另一个是将Dokcer镜像打包成tar包备份保存在本地机器中
+
+########################登录Docker注册中心 操作-推送镜像作为备份########################
+docker login	#登录Docker注册中心
+
+docker tag xxx xxx/xxx:test	#这里的xxx/xxx:test会和docker pull xxx/xxx:test一致
+docker push xxx/xxx
+########################################################################################
+
+########################将Dokcer镜像打包成tar包备份保存在本地机器中 操作########################
+docker save -o ./备份容器名称.tar 备份容器名称 #将此镜像打包成tar包备份保存在本地机器中
+ls -l #查看备份的tar包
+########################################################################################
+
+
+2.恢复容器
+########################登录Docker注册中心操作-拉取备份镜像 恢复使用########################
+docker pull xxx/xxx:test	#拉回备份的镜像
+########################################################################################
+
+########################将Dokcer镜像tar包保存在本地机器中的备份 恢复使用########################
+docker load -i ./备份容器名称.tar
+########################################################################################
+
+docker images #查看加载后的镜像以及运行Docker容器
+
+docker run -itd -p 8181:8181 --name yolo-ralph 容器id /bin/bash	#运行备份的Docker镜像容器
