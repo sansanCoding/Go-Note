@@ -156,6 +156,27 @@ $ protoc --version
     #输出显示如下:
     libprotoc 3.12.3
 
+####################################如下都是docker容器里的配置####################################
+	##若提示如下,则需要再敲入命令export LD_LIBRARY_PATH=/usr/local/lib/即可
+	root@1a64dad14913:/go/src/protobuf-21.4# protoc --version
+	protoc: error while loading shared libraries: libprotoc.so.32: cannot open shared object file: No such file or directory
+	##敲入命令export LD_LIBRARY_PATH=/usr/local/lib/
+	root@1a64dad14913:/go/src/protobuf-21.4# export LD_LIBRARY_PATH=/usr/local/lib/	#这一步可能会是会话型设置,即临时的,最好还是配置到永久
+	root@1a64dad14913:/go/src/protobuf-21.4# protoc --version
+	libprotoc 3.21.4
+
+	##同时编辑vim /root/.bashrc,写入如下配置
+	export LD_LIBRARY_PATH=/usr/local/lib/
+	export GOPATH=/go
+	export PATH=$PATH:$GOPATH/bin
+	##再退出/root/.bashrc文件,再不重启使刚才编辑的命令有效
+	source /root/.bashrc
+	
+	##最后再使用如下命令更新下proto相关扩展---自go1.17后使用go install安装(-i可以看到安装时的详细信息)---
+	go get -u github.com/golang/protobuf/{proto,protoc-gen-go}
+	go install -i google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
+	
+##################################################################################################
 
 6.protobuf按上述流程安装完毕后,未将相关命令写入到/etc/profile中,默认命令安装到目录路径如下:
 $ which protoc
