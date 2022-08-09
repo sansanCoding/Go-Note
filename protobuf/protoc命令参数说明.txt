@@ -1,0 +1,47 @@
+1.将proto文件生成对应计算机编程语言的代码文件
+    a.非RPC代码生成命令:
+        #简单示例:
+            protoc --go_out=. --proto_path=. *.proto (--go_out=.意思输出go代码文件到当前目录下)
+        #针对参数说明:
+            protoc --proto_path=IMPORT_PATH --<lang>_out=DST_DIR path/to/file.proto
+                --proto_path=IMPORT_PATH：可以在 .proto 文件中 import 其他的 .proto 文件，proto_path 即用来指定其他 .proto 文件的查找目录。如果没有引入其他的 .proto 文件，该参数可以省略。
+                --<lang>_out=DST_DIR：指定生成代码的目标文件夹，例如 –go_out=. 即生成 GO 代码在当前文件夹，另外支持 cpp/java/python/ruby/objc/csharp/php 等语言
+
+##############################################################################################################
+		##2020.08.05 最新的proto文件按如上命令生成时,可能提示如下:
+		root@1a64dad14913:/go/src/Test# protoc --go_out=. --proto_path=. *.proto
+		protoc-gen-go: unable to determine Go import path for "test.proto"
+
+		Please specify either:
+			• a "go_package" option in the .proto source file, or
+			• a "M" argument on the command line.
+
+		##解决方法就是可能在proto文件中添加option go_package=".;当前package名称" 或 "./;当前package名称"		### 推荐使用 "./;当前package名称" ###
+		##示例如下:
+		syntax="proto3";
+
+		package Test;
+		option go_package = ".;Test";
+
+		message Test {
+			string Name=1;
+			int64 Age=2;
+		}
+		
+		#######若配置option go_package = ".;Test";提示如下错误,改成option go_package = "./;Test";试试		### 推荐使用 "./;Test" ###
+		root@1a64dad14913:/go/src/Test# protoc --go_out=. --proto_path=. *.proto
+		protoc-gen-go: invalid Go import path "." for "test.proto"
+		The import path must contain at least one forward slash ('/') character.
+		
+##############################################################################################################
+
+    b.有RPC代码生成命令:
+        #简单示例:
+            protoc --go_out=plugins=grpc:. test.proto
+        #针对参数说明:
+            --go_out=plugins=grpc:. #生成的test.pb.go文件放入到当前目录下(grpc:.这个是当前目录下,grpc:./tt这个是当前目录下的tt目录下)
+
+2.proto -I参数说明
+    参数 -IPATH 就是代表 -I，意思是：-I（-IPATH）指定要在其中搜索导入（import）的目录。可指定多次，目录将按顺序搜索。如果没有给出，则使用当前工作目录。
+    如：protoc -I=$GOPATH/src --go_out=. hello.proto
+    说明如果 hello.proto 里面 import 相应文件，会在 gopath 目录下的 src 目录去搜索相应的文件。
