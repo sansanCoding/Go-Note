@@ -1,3 +1,9 @@
+--------------------------------------------------------
+Settings 
+=> selected:Code And automation-Branches
+=> selected:Branch protection rules - master - Edit
+--------------------------------------------------------
+
 # Go-Note(Go-笔记)
 
 ## 声明:
