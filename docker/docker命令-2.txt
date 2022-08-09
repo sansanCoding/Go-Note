@@ -1,0 +1,223 @@
+1.创建多个容器(参考文章地址:https://blog.csdn.net/root_zhb/article/details/119150949):
+docker run -itd --name test1 --network test-net myubuntu:0.01 /bin/bash
+docker run -itd --name test2 --network test-net myubuntu:0.01 /bin/bash
+
+########################################## 镜像列表docker images-说明: ##########################################
+[root@cillian ~]# docker images
+
+REPOSITORY 	TAG 	IMAGE ID 	CREATED 	SIZE
+
+hello-world 	latest 	fce289e99eb9 	1months ago 	1.84kB
+
+###说明:###
+REPOSITORY：镜像仓库源
+
+TAG：镜像标签, 同一仓库源可有多个 TAG，代表这个仓库源的不同个版本
+
+IMAGE ID：镜像ID
+
+CREATED：镜像创建时间
+
+SIZE：镜像大小
+
+########################################## 启动容器 docker run -参数说明 ########################################## 
+[root@cillian ~]# docker run -itd xxx 镜像名 /bin/bash
+-i: 交互式操作(进入容器后可输入容器系统命令,如进入容器是centos系统，就可以输入linux命令,ls pwd这些)。
+
+-t: 终端(一般配合-i使用)。
+
+镜像名: 要启用哪个镜像。
+
+/bin/bash: 放在镜像名后的是命令，这里我们希望有个交互式 Shell，因此用的是 /bin/bash。
+
+–name: 设置一个别名
+
+-d: 让容器在后台运行。
+
+-P: 将容器内部使用的网络端口随机映射到我们使用的主机上。
+#效果如:
+runoob@runoob:~# docker run -d -P training/webapp python app.py
+runoob@runoob:~# docker ps
+CONTAINER ID        IMAGE               COMMAND             ...        PORTS                 
+d3d5e39ed9d3        training/webapp     "python app.py"     ...        0.0.0.0:32769->5000/tcp
+##Docker 开放了 5000 端口（默认 Python Flask 端口）映射到主机端口 32769 上。
+##这时我们可以通过浏览器访问WEB应用,浏览器输入:http://127.0.0.1:32769
+
+-p: 设置不一样的端口,如docker run -d -p 5000:5000 training/webapp python app.py
+#效果如:
+runoob@runoob:~#  docker ps
+CONTAINER ID        IMAGE                             PORTS                     NAMES
+bf08b7f2cd89        training/webapp     ...        0.0.0.0:5000->5000/tcp    wizardly_chandrasekhar
+
+-v: 可以创建一个数据卷并挂载到容器里，也可挂载一个本地主机目录
+#效果如:
+#这样就把主机/opt/app-data目录加载到容器/opt/app目录
+[root@cillian opt]# docker run -d --name app -v /opt/app-data:/opt/app training/webapp
+fce27f6ea9ce9699864644a48aed6db85b9
+
+
+
+########################################## 实战命令: ########################################## #################################
+#启动docker.io/golang镜像中的一个容器，设置别名为yolo-ralph
+docker run -it --name yolo-ralph docker.io/golang /bin/bash
+
+##再加入-d 将这个容器放入后台运行,可通过docker exec进入容器
+##再加入-p 指定容器端口映射到
+docker run -itd -p 8181:8181 --name yolo-ralph golang:latest /bin/bash
+
+
+#移除（相当于删除）停止的容器---这个操作是移除所有停止的容器---
+docker container prune
+
+#进入容器后使用exit后退出,再使用docker ps -a查看就会看到容器是退出状态,可使用docker start 容器id 启动容器后,再使用docker exec -it 容器id /bin/bash 进入容器;
+
+#删除一个容器(加-f估计是强制的)
+docker rm -f 容器id
+########################################## ########################################## ########################################## 
+
+
+
+==================================================================================================
+1.docker简单说明(参考文章地址:https://baijiahao.baidu.com/s?id=1735145746591934522&wfr=spider&for=pc):
+简单理解为启动docker run images镜像就会变成容器，每个镜像可以启动成为多个容器、镜像存放在仓库中。
+
+关于镜像的命令常用的有
+
+Docker images 列出本机存在的镜像
+
+Docker search 查找docker镜像
+
+Docker pull 下载镜像
+
+Docker rmi 删除镜像
+
+Docker build 生成镜像
+
+Docker ps 查看正在运行的容器
+
+Docker save/load 镜像导出导入
+
+---------------------------------------------------------------------------------------------------
+2-1.docker的镜像列表
+[root@cillian ~]# docker images
+
+REPOSITORY 	TAG 	IMAGE ID 	CREATED 	SIZE
+
+hello-world 	latest 	fce289e99eb9 	1months ago 	1.84kB
+
+###单词说明:###
+REPOSITORY：镜像仓库源
+
+TAG：镜像标签, 同一仓库源可有多个 TAG，代表这个仓库源的不同个版本
+
+IMAGE ID：镜像ID
+
+CREATED：镜像创建时间
+
+SIZE：镜像大小
+
+#############################################################################
+2-2.使用 docker ps 可以看到容器端口
+runoob@runoob:~$ docker ps
+CONTAINER ID    IMAGE               COMMAND            ...           PORTS                     NAMES
+fce072cc88ce    training/webapp     "python app.py"    ...     0.0.0.0:32768->5000/tcp   grave_hopper
+
+2-3.使用docker ps -a 查看所有的容器包括已退出的容器
+
+---------------------------------------------------------------------------------------------------
+3.Docker rmi XXX报错，一般看两点：一个是有容器实例存在，要先删除容器实例，或者有镜像依赖无法删除
+
+---------------------------------------------------------------------------------------------------
+4.Docker tag 为镜像打标签，：后面就是搭的标签，一般是版本号
+[root@cillian ~]# docker tag 791b6e40940c mysql:v3.0.1
+
+[root@ cillian ~]# docker images
+REPOSITORY 	TAG 	IMAGE ID 	CREATED 	SIZE
+mysql 		v3.0.1 	791b6e40940c 	2 weeks ago 	465MB
+
+---------------------------------------------------------------------------------------------------
+5.镜像导出导入
+[root@ cillian ~]# docker images
+REPOSITORY 	TAG 	IMAGE ID 	CREATED 	SIZE
+mysql 		v2.0.2 	57544a04cd1a 	3 months ago 	91.5MB
+
+#镜像打包(如下2种命令都尝试下，看哪个是对的)
+[root@cillian ~]# docker save >mysql-v2.0.2.tar 57544a04cd1a 
+[root@cillian ~]# docker save >mysql -v2.0.2.tar 57544a04cd1a 镜像打包
+
+#查看镜像包
+[root@cillian ~]# ll | grep mysql 
+-rw-rw-r-- 1 root root 93898240 Jun 4 09:06 mysql-v2.0.2.tar
+
+---------------------------------------------------------------------------------------------------
+6.导入
+docker load < mysql-v2.0.2.tar
+
+---------------------------------------------------------------------------------------------------
+#注意！
+如果启动容器后，容器内容有变化，就使用export、import到本地
+---------------------------------------------------------------------------------------------------
+
+7.容器启动以及查看：
+docker run -it mysql
+#加参数 -d 	就会进入后台运行
+#加参数 –name 	就是会设置一个别名
+#加参数 -v 	可以创建一个数据卷并挂载到容器里，也可挂载一个本地主机目录
+
+#这样就把主机/opt/app-data目录加载到容器/opt/app目录
+[root@cillian opt]# docker run -d --name app -v /opt/app-data:/opt/app training/webapp
+fce27f6ea9ce9699864644a48aed6db85b9
+
+---------------------------------------------------------------------------------------------------
+8.进入容器,但是一般使用exec，因为进入后退出不会让容器停止
+docker exec -it XXX /bash
+或者
+docker attach
+
+---------------------------------------------------------------------------------------------------
+9.清理停止的容器：
+docker container prune
+
+---------------------------------------------------------------------------------------------------
+10.查看日志
+例：实时查看docker容器名为mysqlt的最后10行日志
+docker logs -f ---tail 10 mysql
+
+例：将错误日志写入文件：
+docker logs -f -tail 100 mysql| grep error >> logs_error.txt
+
+
+========================================================================================================================
+
+
+1.docker安装Centos
+https://www.runoob.com/docker/docker-install-centos.html
+
+查看可用的 CentOS 版本
+访问 CentOS 镜像库地址：https://hub.docker.com/_/centos?tab=tags&page=1。
+
+a.拉取指定版本的 CentOS 镜像，这里我们安装指定版本为例(centos7):
+docker pull centos:centos7
+
+b.查看本地镜像
+使用以下命令来查看是否已安装了 centos7：
+docker images
+
+c.运行容器，并且可以通过 exec 命令进入 CentOS 容器。
+docker run -itd --name centos-test centos:centos7
+
+####################################################################################################
+启动容器
+#以下命令使用 ubuntu 镜像启动一个容器，参数为以命令行模式进入该容器：
+docker run -it ubuntu /bin/bash
+
+参数说明：
+-i: 交互式操作。
+-t: 终端。
+-d：就会进入后台运行
+ubuntu: ubuntu 镜像。
+/bin/bash：放在镜像名后的是命令，这里我们希望有个交互式 Shell，因此用的是 /bin/bash。
+
+#要退出终端，直接输入 exit:
+root@ed09e4490c57:/# exit
+####################################################################################################
