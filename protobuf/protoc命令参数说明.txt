@@ -33,6 +33,8 @@
 		protoc-gen-go: invalid Go import path "." for "test.proto"
 		The import path must contain at least one forward slash ('/') character.
 		
+		##实际可能是option go_package = "go.mod文件中的module名称/所在目录路径的父级目录"
+		##效果如option go_package = "Go-Note/protobuf"
 ##############################################################################################################
 
     b.有RPC代码生成命令:
