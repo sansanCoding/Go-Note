@@ -1,0 +1,26 @@
+#启动容器并至于后台运行
+docker run -itd -p 8181:8181 --name=yolo-ralph golang:latest /bin/bash
+##响应如下容器id
+8388355b39185452194c6514b7c26906f18c094e6330286a4aa57a069f1bf75f
+
+
+#进入容器(以-it开头和/bin/bash结尾启动容器,则以同样方式进入容器)
+docker exec -it 8388355b39185452194c6514b7c26906f18c094e6330286a4aa57a069f1bf75f /bin/bash
+
+
+#启动容器-后台运行-指定容器端口8181映射本机端口8181(默认容器端口是开放的,可能本机端口需要配置放开端口访问)-将本机/root/ralph/go/src目录挂载到容器/go/src目录(这样直接在本机src目录下的文件修改就完成了容器src目录下的文件修改)
+docker run -itd -p 8181:8181 --name=yolo-ralph -v /root/ralph/go/src:/go/src golang:latest /bin/bash
+
+
+#删除容器
+docker rm -f 容器id
+
+#删除镜像(强制)
+docker rmi -f 镜像id
+
+--------------------------------------------------------------------------------------------
+CentOS7 docker 安装vim
+#先同步 /etc/apt/sources.list 和 /etc/apt/sources.list.d 中列出的源的索引，这样才能获取到最新的软件包。
+apt-get update
+#安装vim,中途提示[y/N] 输入y即可
+apt-get install vim
