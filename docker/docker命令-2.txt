@@ -58,12 +58,12 @@ fce27f6ea9ce9699864644a48aed6db85b9
 
 
 ########################################## 实战命令: ########################################## #################################
-#启动docker.io/golang镜像中的一个容器，设置别名为yolo-ralph
-docker run -it --name yolo-ralph docker.io/golang /bin/bash
+#启动docker.io/golang镜像中的一个容器，设置别名为 test
+docker run -it --name=test docker.io/golang /bin/bash
 
 ##再加入-d 将这个容器放入后台运行,可通过docker exec进入容器
 ##再加入-p 指定容器端口映射到
-docker run -itd -p 8181:8181 --name yolo-ralph golang:latest /bin/bash
+docker run -itd -p 8181:8181 --name=test golang:latest /bin/bash
 
 
 #移除（相当于删除）停止的容器---这个操作是移除所有停止的容器---
